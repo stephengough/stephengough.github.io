@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" onclick="pause();"></canvas>
+</body>
+	<script src="./canvasanim.js"></script>
+	<script>
+		var groups = {
+			"thread1": {"x" : 260, "y": 200}
+		}
+
+		var timelines = [
+			{
+				"id": "bg", "src": "pcb.png", "events": [
+					{"starttime": 0000, "endtime": -1, "type": "static", "x": 0, "y": 0}
+				]
+			},
+			{
+				"id": "code", "group": "thread1", "src": "code.png", "events": [
+					{"starttime": 0000, "endtime": -1, "type": "periodic", "startx": 100, "starty": 39 , "period": 500, "dx":-64, "dy":0}
+
+				]
+			},
+			{
+				"id": "cpu1", "group": "thread1", "src": "cpu.png", "events": [
+					{"starttime": 0000, "endtime": -1, "type": "static", "x": 0, "y": 0}
+				]
+			}
+		];
+				
+		var canvas;
+		var stage = new Stage(timelines, groups);
+
+		function init() {
+		  canvas = document.getElementById('canvas');
+		  window.requestAnimationFrame(draw);
+		}
+
+		function draw(timestamp) {
+			var ctx = canvas.getContext('2d');
+
+			ctx.clearRect(0,0,canvas.width,canvas.height); // clear canvas
+
+			stage.draw(ctx, timestamp);
+
+			window.requestAnimationFrame(draw);
+		}
+
+		function pause() {
+			stage.togglePause(performance.now());
+		}
+
+		init();	
+	</script>
+
+</html>

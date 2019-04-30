@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" onclick="pause();"></canvas>
+</body>
+	<script src="./canvasanim.js"></script>
+	<script>
+		var groups = {
+			"thread1": {"x" : 260, "y": 200}
+		}
+
+		var timelines = [
+			{
+				"id": "bg", "src": "pcb.png", "events": [
+					{"starttime": 0000, "endtime": -1, "type": "static", "x": 0, "y": 0}
+				]
+			},
+			{
+				"id": "code", "group": "thread1", "src": "code2.png", "events": [
+					{"starttime": 0000, "endtime": 8000, "type": "periodic", "startx": 100, "starty": 39 , "period": 500, "dx":-64, "dy":0},
+					{"starttime": 8000, "endtime": 14000, "type": "static", "x": -476, "y": 39},
+					{"starttime": 14000, "endtime": -1, "type": "periodic", "startx": -412, "starty": 39 , "period": 500, "dx":-64, "dy":0}
+
+				]
+			},
+			{
+				"id": "down", "group": "thread1", "src": "down.png", "events": [
+					{"starttime": 8000, "endtime": 9000, "type": "interp", "startx":30, "starty":90, "endx":30, "endy":200}
+				]
+			},
+			{
+				"id": "up", "group": "thread1", "src": "up.png", "events": [
+					{"starttime": 13000, "endtime": 14000, "type": "interp", "startx":30, "starty":200, "endx":30, "endy":90}
+				]
+			},
+			{
+				"id": "disk", "group": "thread1", "src": "disk.png,disk_on.png,200", "events": [
+					{"starttime": 9000, "endtime": 13000, "type": "static", "x":25, "y":228}
+				]
+			},
+			{
+				"id": "cpu1", "group": "thread1", "src": "cpu.png", "events": [
+					{"starttime": 0000, "endtime": -1, "type": "static", "x": 0, "y": 0}
+				]
+			},
+			{
+				"id": "grey", "group": "thread1", "src": "grey.png", "events": [
+					{"starttime": 8000, "endtime": 14000, "type": "static", "x": 37, "y": 35}
+				]
+			}
+
+		];
+				
+		var canvas;
+		var stage = new Stage(timelines, groups, 30000);
+
+		function init() {
+		  canvas = document.getElementById('canvas');
+		  window.requestAnimationFrame(draw);
+		}
+
+		function draw(timestamp) {
+			var ctx = canvas.getContext('2d');
+
+			ctx.clearRect(0,0,canvas.width,canvas.height); // clear canvas
+
+			stage.draw(ctx, timestamp);
+
+			window.requestAnimationFrame(draw);
+		}
+
+		function pause() {
+			stage.togglePause(performance.now());
+		}
+
+		init();	
+	</script>
+
+</html>
